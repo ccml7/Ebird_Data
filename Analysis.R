@@ -12,12 +12,12 @@ library(raster)
 # set_ebirdst_access_key("XXXXXXX") ## You need an access key from https://ebird.org/st/request
 
 ## Download species data
-pc_path <- ebirdst_download(species = "Protonotaria citrea") ## This could take a while
-abd <- load_raster("abundance", path = pc_path, resolution = "mr") ## Select abundance layers
+pc_path <- ebirdst_download(species = "Setophaga castanea") ## This could take a while
+abd <- load_raster("abundance", path = pc_path, resolution = "lr") ## Select abundance layers
 
 #### Enter seasonal data
-initial_date <- "2020-10-26" ## Date format (YYYY-MM-DD) although year does not matter
-final_date <- "2021-02-22"
+initial_date <- "2020-12-14" ## Date format (YYYY-MM-DD) although year does not matter
+final_date <- "2021-03-22"
 
 ## Extracting weeks numbers from dates
 weeks <- function(initial_date, final_date) { 
@@ -59,13 +59,19 @@ species_data <- seasonal_measure(raster_stack = abd, weeks = weeks_numbers)
 ### Geographical data
 ## Layers upload
 area_interest <- shapefile("/home/camilo/Documentos/Projects/Ebird_Data/layers/AreaEstudio_HC_20220311.shp")
-colombia_shape <- shapefile("/home/camilo/Documentos/Capas/COL_adm/COL_adm0_1.shp")
+colombia_shape <- shapefile("/home/camilo/Documentos/Capas/COL_adm/COL_adm1.shp")
 
 area_transformed <- spTransform(area_interest, crs(abd))
 colombia_transformed <- spTransform(colombia_shape, crs(abd))
 
+## Selecting departaments surrounding area of interest
+pol1 <- which(colombia_transformed@data$NAME_1 == "Córdoba")
+pol2 <- which(colombia_transformed@data$NAME_1 == "Antioquia")
 
-colombia_data <- mask(crop(species_data, colombia_transformed), colombia_transformed)
+pol_final <- union(colombia_transformed[pol1,], colombia_transformed[pol2,])
+pol_final <- aggregate(pol_final)
+
+colombia_data <- mask(crop(species_data, pol_final), pol_final)
 total <- cellStats(colombia_data, sum)
 
 area_interest_data <- mask(crop(species_data, area_transformed), area_transformed)
