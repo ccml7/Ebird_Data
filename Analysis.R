@@ -60,8 +60,8 @@ species_data <- seasonal_measure(raster_stack = abd, weeks = weeks_numbers)
 
 ### Geographical data
 ## Layers upload
-area_interest <- shapefile("/home/camilo/Documentos/Projects/Ebird_Data/layers/AreaEstudio_HC_20220311.shp")
-colombia_shape <- shapefile("/home/camilo/Documentos/Capas/COL_adm/COL_adm1.shp")
+area_interest <- shapefile("AreaEstudio_HC_20220311.shp")
+colombia_shape <- shapefile("COL_adm1.shp")
 
 area_transformed <- spTransform(area_interest, crs(abd))
 colombia_transformed <- spTransform(colombia_shape, crs(abd))
