@@ -1,23 +1,25 @@
 ## Installation of packages if it is necesary
-# install.packages("remotes")
-# remotes::install_github("CornellLabofOrnithology/ebirdst")
+install.packages("remotes")
+install.packages("raster")
+remotes::install_github("CornellLabofOrnithology/ebirdst")
 
 library(ebirdst)
 library(raster)
+
 # library(sf)
 # library(rnaturalearth)
 # library(ggplot2)
 # library(viridisLite)
 
-# set_ebirdst_access_key("XXXXXXX") ## You need an access key from https://ebird.org/st/request
+set_ebirdst_access_key("XXXXXXX") ## You need an access key from https://ebird.org/st/request
 
 ## Download species data
-pc_path <- ebirdst_download(species = "Setophaga castanea") ## This could take a while
+pc_path <- ebirdst_download(species = "Protonotaria citrea") ## This could take a while
 abd <- load_raster("abundance", path = pc_path, resolution = "lr") ## Select abundance layers
 
 #### Enter seasonal data
-initial_date <- "2020-12-14" ## Date format (YYYY-MM-DD) although year does not matter
-final_date <- "2021-03-22"
+initial_date <- "2020-10-26" ## Date format (YYYY-MM-DD) although year does not matter
+final_date <- "2021-02-22"
 
 ## Extracting weeks numbers from dates
 weeks <- function(initial_date, final_date) { 
