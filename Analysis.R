@@ -14,12 +14,12 @@ library(raster)
 set_ebirdst_access_key("XXXXXXX") ## You need an access key from https://ebird.org/st/request
 
 ## Download species data
-pc_path <- ebirdst_download(species = "Protonotaria citrea") ## This could take a while
+pc_path <- ebirdst_download(species = "Buteo platypterus") ## This could take a while
 abd <- load_raster("abundance", path = pc_path, resolution = "lr") ## Select abundance layers
 
 #### Enter seasonal data
-initial_date <- "2020-10-26" ## Date format (YYYY-MM-DD) although year does not matter
-final_date <- "2021-02-22"
+initial_date <- "2020-12-07" ## Date format (YYYY-MM-DD) although year does not matter
+final_date <- "2021-02-08"
 
 ## Extracting weeks numbers from dates
 weeks <- function(initial_date, final_date) { 
@@ -60,8 +60,8 @@ species_data <- seasonal_measure(raster_stack = abd, weeks = weeks_numbers)
 
 ### Geographical data
 ## Layers upload
-area_interest <- shapefile("AreaEstudio_HC_20220311.shp")
-colombia_shape <- shapefile("COL_adm1.shp")
+area_interest <- shapefile("/home/camilo/Documentos/Projects/Ebird_Data/layers/AreaEstudio_HC_20220311.shp")
+colombia_shape <- shapefile("/home/camilo/Documentos/Capas/COL_adm/COL_adm1.shp")
 
 area_transformed <- spTransform(area_interest, crs(abd))
 colombia_transformed <- spTransform(colombia_shape, crs(abd))
@@ -81,3 +81,13 @@ area <- cellStats(area_interest_data, sum)
 
 percentaje_population <- (area / total) * 100
 percentaje_population
+
+#### Mapping Results
+## Hay que correr todas la lineas para tener el mapa al final
+### CAMBIAR LA RUTA DE DESTINO DE LA FIGURA!!!!!
+png("/home/camilo/Documentos/Projects/Ebird_Data/Mapa-Especie.png", units = "cm", width = 15, height = 15, res = 100)
+plot(colombia_data, title = "Abudancia relativa Buteo platypterus") ## CAMBIAR NOMBRE DE LA ESPECIE!!!
+plot(colombia_transformed[pol1,], add = T)
+plot(colombia_transformed[pol2,], add = T)
+plot(area_transformed, add = T, lwd = 1, border = "red")
+dev.off()
