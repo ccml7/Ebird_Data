@@ -86,7 +86,7 @@ percentaje_population
 ## Hay que correr todas la lineas para tener el mapa al final
 ### CAMBIAR LA RUTA DE DESTINO DE LA FIGURA!!!!!
 png("/home/camilo/Documentos/Projects/Ebird_Data/Mapa-Especie.png", units = "cm", width = 15, height = 15, res = 100)
-plot(colombia_data, title = "Abudancia relativa Buteo platypterus") ## CAMBIAR NOMBRE DE LA ESPECIE!!!
+plot(colombia_data, main = "Abudancia relativa Buteo platypterus") ## CAMBIAR NOMBRE DE LA ESPECIE!!!
 plot(colombia_transformed[pol1,], add = T)
 plot(colombia_transformed[pol2,], add = T)
 plot(area_transformed, add = T, lwd = 1, border = "red")
