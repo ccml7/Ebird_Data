@@ -14,24 +14,31 @@ library(raster)
 set_ebirdst_access_key("XXXXXXX") ## You need an access key from https://ebird.org/st/request
 
 ## Download species data
-pc_path <- ebirdst_download(species = "Buteo platypterus") ## This could take a while
+pc_path <- ebirdst_download(species = "Contopus sordidulus") ## This could take a while
 abd <- load_raster("abundance", path = pc_path, resolution = "lr") ## Select abundance layers
 
 #### Enter seasonal data
-initial_date <- "2020-12-07" ## Date format (YYYY-MM-DD) although year does not matter
-final_date <- "2021-02-08"
+initial_date <- "2020-12-28" ## Date format (YYYY-MM-DD) although year does not matter
+final_date <- "2021-03-01"
 
 ## Extracting weeks numbers from dates
-weeks <- function(initial_date, final_date) { 
+weeks <- function(initial_date, final_date) {
     week1 <- as.numeric(strftime(initial_date, "%V"))
     week2 <- as.numeric(strftime(final_date, "%V"))
 
     if (week1 < week2) {
        weeks_final <- seq(from = week1, to = week2, by = 1)
     } else if (week1 > week2) {
-       part1 <- seq(week1, 52, by = 1)
-       part2 <- seq(1, week2, by = 1)
-       weeks_final <- sort(c(part1, part2))
+        if (week1 == 53) {
+            part1 <- 52
+            part2 <- seq(1, week2, by = 1)
+            weeks_final <- sort(c(part1, part2))
+        }
+        else {
+            part1 <- seq(week1, 52, by = 1)
+            part2 <- seq(1, week2, by = 1)
+            weeks_final <- sort(c(part1, part2))
+        }
     } else {
        print("Date values are equal or doesn't correspond to a date format")
     }
@@ -85,8 +92,8 @@ percentaje_population
 #### Mapping Results
 ## Hay que correr todas la lineas para tener el mapa al final
 ### CAMBIAR LA RUTA DE DESTINO DE LA FIGURA!!!!!
-png("/home/camilo/Documentos/Projects/Ebird_Data/Mapa-Especie.png", units = "cm", width = 15, height = 15, res = 100)
-plot(colombia_data, main = "Abudancia relativa Buteo platypterus") ## CAMBIAR NOMBRE DE LA ESPECIE!!!
+png("/home/camilo/Documentos/Projects/Ebird_Data/Mapa-Especie-Contopus.png", units = "cm", width = 15, height = 15, res = 100)
+plot(colombia_data, main = "Abudancia relativa Contopus sordidulus") ## CAMBIAR NOMBRE DE LA ESPECIE!!!
 plot(colombia_transformed[pol1,], add = T)
 plot(colombia_transformed[pol2,], add = T)
 plot(area_transformed, add = T, lwd = 1, border = "red")
